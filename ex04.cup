@@ -1,0 +1,33 @@
+import java_cup.runtime.*;
+
+terminal GANHA, PERDE;
+terminal MAIS, PTVIRG;
+terminal Integer INTEIRO;
+
+non terminal Integer expr, expr_ptv;
+
+start with expr_ptv;
+
+expr_ptv ::= expr:e 
+                {: 
+                    System.out.println("Saldo final = " + e); 
+                :} 
+             PTVIRG;
+
+expr ::= GANHA INTEIRO:n 
+            {: 
+                System.out.println("Ganhou " + n);
+                RESULT = new Integer(n.intValue()); 
+            :}
+
+       | PERDE INTEIRO:n 
+            {: 
+                System.out.println("Perdeu " + n);
+                RESULT = new Integer(-n.intValue()); 
+            :}
+
+       | expr:e1 MAIS expr:e2
+            {: 
+                System.out.println("Atualizando saldo");
+                RESULT = new Integer(e1.intValue() + e2.intValue()); 
+            :};

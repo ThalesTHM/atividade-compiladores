@@ -1,0 +1,40 @@
+Respostas - Exercício 04
+
+Entrada: GANHA 10 + PERDE 3 + GANHA 2;
+
+------------------------------------------------------------
+1. Ordem das mensagens exibidas:
+
+Ganhou 10
+Perdeu 3
+Ganhou 2
+Atualizando saldo
+Atualizando saldo
+Saldo final = 9
+
+------------------------------------------------------------
+2. Saldo final: 9
+
+------------------------------------------------------------
+3. Por que "Ganhou"/"Perdeu" aparecem antes de "Atualizando saldo"?
+
+O parser é bottom-up (LALR). As ações executam no momento da redução.
+O parser só pode reduzir "expr MAIS expr" depois que ambos os lados
+já foram reduzidos individualmente. Portanto:
+
+- GANHA 10 → reduz para expr → imprime "Ganhou 10"
+- PERDE 3  → reduz para expr → imprime "Perdeu 3"
+- GANHA 2  → reduz para expr → imprime "Ganhou 2"
+- Só então reduz expr MAIS expr → imprime "Atualizando saldo" (duas vezes,
+  uma para cada operação de soma)
+
+------------------------------------------------------------
+4. Se a entrada fosse: GANHA 5 + (PERDE 2 + GANHA 1)
+   O resultado mudaria? Por quê?
+
+Não. A gramática já é associativa à direita por padrão (CUP resolve
+conflitos shift-reduce com shift, agrupando sempre para a direita).
+Então "GANHA 5 + PERDE 2 + GANHA 1" já é interpretado como
+"GANHA 5 + (PERDE 2 + GANHA 1)" = 5 + (-2 + 1) = 4.
+Forçar os parênteses não altera nada porque a gramática já faz
+esse agrupamento naturalmente.
